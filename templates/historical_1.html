@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}: Historical{% endblock %}
+
+{% block main %}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">By city name</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">By coordinates</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <!--By city name tab-->
+    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <div class="container">
+
+            <br>
+            <form class="input-group" action="/historical_1" method="post">
+                <input type="text" class="form-control" placeholder="City" name="city" autocomplete="off">
+                <input type="text" class="form-control" placeholder="Start date" name="start" autocomplete="off" onfocus="(this.type='date')" onblur="(this.type='text')" min="2020-11-27" max="">
+                <input type="text" class="form-control" placeholder="End date" name="end" autocomplete="off" onfocus="(this.type='date')" onblur="(this.type='text')" min="2020-11-27" max="">
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
+
+            <br>
+            <div class="container">
+                {% if api_result|length == 2 %}
+
+                    {{ api_result['message'] }}.
+
+                {% elif api_result|length > 2 %}
+
+                    <p>
+                        Average daily concentrations of <a href="https://www.breezometer.com/air-quality-map/air-quality/pollutants" class="link-dark link-offset-2 link-underline link-underline-opacity-0">polluting gases</a> in {{ current_result_vars['location'] }}, {{ current_result_vars['country'] }} ({{ current_result_vars['lat'] }}&deg, {{ current_result_vars['lon'] }}&deg) from {{ current_result_vars['start'] }} to {{ current_result_vars['end'] }}:
+                    </p>
+
+                    <div class="row">
+                        <img src="/static/pm2_5.png" class="center">
+                        <img src="/static/pm10.png" class="center">
+                    </div>
+                    <div class="row">
+                        <img src="/static/so2.png" class="center">
+                        <img src="/static/no2.png" class="center">
+                    </div>
+                    <div class="row">
+                        <img src="/static/o3.png" class="center">
+                        <img src="/static/co.png" class="center">
+                    </div>
+
+                    <br>
+                    <hr>
+
+                    <div class="container">
+                        <ul>
+                            <small>
+                            <li>
+                                Fine and course atmospheric particular matter come from natural or anthropogenic sources: burning of fossil fuels, waste incineration, wildfires, sea spray, industrial activities, etc. Both PM<sub>10</sub> and PM<sub>2.5</sub> are inhalable and may cause inflammation in the respiratory system. PM<sub>2.5</sub> can further penetrate gas exchange regions and impact multiple organs through the cardiovascular system.
+                            </li>
+                            <li>
+                                Sulfur dioxide and nitrogen dioxide are emitted by industrial and traffic sources. Sulfur dioxide is an irritant of the eyes and the respiratory tract. Along with nitrogen oxide, sulfur dioxide reacts with water in the atmosphere to produce acid rain. Nitrogen dioxide contributes to reduced lung function, bronchitis, and asthma. 
+                            </li>                        
+                            <li>
+                                Ozone exposure causes inflammation and irritation of the respiratory tract, and is linked with asthma and other respiratory diseases. Carbon monoxide, which comes from vehicular emissions and industrial activities, interferes with the transport of oxygen in the bloodstream.
+                            </li>
+                            </small>
+                        </ul>
+                    </div>
+                    <hr>
+                    
+                {% else %}
+                
+                {% endif %}
+            </div>
+
+        </div>
+    </div> 
+
+    <!--By coordinates tab-->
+    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="container">
+
+            <br>
+            <form class="input-group" action="/historical_2" method="post">
+                <input type="text" class="form-control" placeholder="Latitude" name="lat" autocomplete="off">
+                <input type="text" class="form-control" placeholder="Longitude" name="lon"autocomplete="off">
+                <input type="text" class="form-control" placeholder="Start date" name="start" autocomplete="off" onfocus="(this.type='date')" onblur="(this.type='text')" min="2020-11-27" max="">
+                <input type="text" class="form-control" placeholder="End date" name="end" autocomplete="off" onfocus="(this.type='date')" onblur="(this.type='text')" min="2020-11-27" max="">
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}: Current{% endblock %}
+
+{% block main %}
+<!--Tabs-->
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">By city name</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link link-dark active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">By coordinates</button>
+    </li>
+</ul>
+
+<div class="tab-content" id="myTabContent">
+    <!--By city name tab-->
+    <div class="tab-pane fade" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <div class="container">
+
+            <br>
+            <form class="input-group" action="/current_1" method="post">
+                <input type="text" class="form-control" placeholder="City" name="city" autocomplete="off">
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div> 
+
+    <!--By coordinates tab-->
+    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="container">
+
+            <br>
+            <form class="input-group" action="/current_2" method="post">
+                <input type="text" class="form-control" placeholder="Latitude" name="lat" autocomplete="off">
+                <input type="text" class="form-control" placeholder="Longitude" name="lon"autocomplete="off">
+                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+            </form>
+
+            <br>
+            <div class="container">
+                {% if api_result|length == 2 %}
+
+                    {{ api_result['message'] }}.
+
+                {% elif api_result|length == 12 %}
+
+                    <p>
+                    The air quality in {{ current_result_vars['lat'] }}&deg, {{ current_result_vars['lon'] }}&deg classifies as <strong>{{ current_result_vars['aqi_cat'] }}</strong>.
+                    </p>
+                    <br>
+
+                    <p>Air pollutant concentrations in μg/m<sup>3</sup>:</p>
+                    <table class="table text-center custom-class">
+                        <thead>
+                            <tr>
+                                <th>SO<sub>2</sub></th>
+                                <th>NO<sub>2</sub></th>
+                                <th>PM<sub>10</sub></th>
+                                <th>PM<sub>2.5</sub></th>
+                                <th>O<sub>3</sub></th>
+                                <th>CO</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            <tr>
+                                {% for item in components_list %}
+                                <td>{{ item['value'] }}</td>
+                                {% endfor %}
+                            </tr>
+                            <tr>
+                                {% for item in components_list %}
+                                <td>{{ item['category'] }}</td>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <script>changeCol();</script>
+
+                    <p class="text-center"><small>[{{ current_result_vars['dt'] }}]</small></p>
+
+                {% else %}
+                
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
