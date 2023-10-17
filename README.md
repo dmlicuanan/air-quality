@@ -25,3 +25,8 @@ Project files and directories:
 - static directory
     - styles.css is the CSS stylesheet for the HTML pages
     - co.png, no.png, o3.png, pm2_5.png, pm10.png, so2.png are the file names of the plots expected after historical_1.html and historical_2.html are accessed via POST.
+
+***
+
+Author's note:
+This is my final project for Harvard University's CS50 (Introduction to Computer Science), which I completed on 2023-10-12. Codes last updated on 2023-10-13.
